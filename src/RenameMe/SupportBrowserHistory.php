@@ -8,6 +8,7 @@ use Livewire\Component;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Routing\UrlGenerator;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use function Livewire\str;
 
@@ -74,6 +75,9 @@ class SupportBrowserHistory
                 Request::create($referer, Livewire::originalMethod())
             );
         } catch (NotFoundHttpException $e) {
+            // If not, use the current route.
+            return app('router')->current();
+        } catch (MethodNotAllowedHttpException $e) {
             // If not, use the current route.
             return app('router')->current();
         }
